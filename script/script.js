@@ -10,7 +10,6 @@ class MainViewContainer {
         this.playZone = new PIXI.Container();
         this.app.stage.addChild(this.cardsContainer);
         this.app.stage.addChild(this.playZone);
-
     }
 
 }
@@ -166,10 +165,9 @@ class ShuffledCardDeck {
             front.y = 50;
             front.scale.x = -1;
             front.anchor.x = 0.5;      
-
             
             ticker.add( () => {
-                if( index > 0 && !isFinished ){ return }
+                if( index > 0 && !isFinished ){ return; }
                 
                 if( back.skew.y < finalPoint ) {
                     
@@ -178,7 +176,6 @@ class ShuffledCardDeck {
 
                     if( back.skew.y > finalPoint/2 ) {
                         back.visible = false;
-                        
                     }
                 } else {
                     front.skew.y = finalPoint;  
@@ -186,7 +183,14 @@ class ShuffledCardDeck {
                     isFinished = true;
                 }
 
+                if( index > 0 && front.skew.y == finalPoint ){
+                        DrawButton.button.alpha = 1;
+                        DrawButton.button.buttonMode = true;
+                        DrawButton.button.interactive = true;
+                }
+                
             });
+            
         });
 
     }
@@ -208,8 +212,7 @@ class Button {
         this.buttonDimensions = buttonProps.buttonDimensions;
         this.buttonMargin = buttonProps.buttonMargin;
         
-        this.buttonMode = true;
-        this.interactive = true;
+        this.opacity = 0.5;
         
         /* Text props */
         this.textProps = textProps.mainProps;
@@ -223,6 +226,7 @@ class Button {
         this.button.lineStyle( ...this.buttonBorder );
         this.button.drawRoundedRect( ...this.buttonDimensions )
         this.button.endFill();
+        this.button.alpha = this.opacity;
 
         const horizontalPosition = StartApp.app.screen.width - this.button.getBounds().width;
         const verticalPosition = 0 - this.button.getBounds().y + 4 ;
@@ -230,9 +234,6 @@ class Button {
         /* Little space from table borders */ 
         this.button.x = horizontalPosition - this.buttonMargin;
         this.button.y = verticalPosition + this.buttonMargin;
-
-        this.button.buttonMode = this.buttonMode;
-        this.button.interactive = this.interactive;
 
         StartApp.app.stage.addChild( this.button );      
         
